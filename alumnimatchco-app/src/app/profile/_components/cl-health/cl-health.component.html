@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar appAM>
+    <ion-buttons slot="start">
+      <ion-button mode="md" (click)="dismiss()">
+        <ion-icon icon-only name="md-arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Simple Health Questions</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <p class="am-title">Mental</p>
+  <ion-label class="am-label">How often do you do puzzles or other mental brainy exercises?</ion-label>
+  <ion-item class="am-control-item" lines="none">
+    <ion-select [(ngModel)]="data.mental" okText="CHOOSE" cancelText="CANCEL" placeholder="How often do you do..." [interfaceOptions]="selectMentalOption">
+      <ion-select-option *ngFor="let item of mental_exercises; let i = index;" [value]="i">{{item}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item class="am-control-item ion-padding-start">
+    <ion-label>Mental Privacy</ion-label>
+    <ion-toggle appAM [(ngModel)]="data.mental_privacy" mode="ios"></ion-toggle>
+  </ion-item>
+  <br>
+  <p class="am-title ion-margin-top">Physical</p>
+  <ion-label class="am-label">How often do you physically exercise your body?</ion-label>
+  <ion-item class="am-control-item" lines="none">
+    <ion-select [(ngModel)]="data.physical" okText="CHOOSE" cancelText="CANCEL" placeholder="How often do you do..." [interfaceOptions]="selectPhysicalOption">
+      <ion-select-option *ngFor="let item of physical_exercises; let i = index;" [value]="i">{{item}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item class="am-control-item ion-padding-start">
+    <ion-label>Physical Privacy</ion-label>
+    <ion-toggle appAM [(ngModel)]="data.physical_privacy" mode="ios"></ion-toggle>
+  </ion-item>
+
+</ion-content>
+
+<ion-footer appAM class="btn-footer">
+  <ion-button (click)="onSubmit()" expand="block" class="ion-no-margin" appAM>Submit</ion-button>
+</ion-footer>

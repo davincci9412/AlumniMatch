@@ -1,0 +1,7 @@
+{
+  "name": "AlumniMatch",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

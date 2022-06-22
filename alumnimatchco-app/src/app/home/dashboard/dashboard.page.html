@@ -1,0 +1,134 @@
+<ion-header>
+  <ion-toolbar appAM>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" class="ion-no-margin btn-logo">
+        <img src="assets/imgs/logo-white.png" width="32">
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">
+      Community Pulse
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button autoHide="false" menu="mainmenu" color="light"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="banner" appAM>
+    <img [src]="'assets/imgs/banner.png'" class="banner">
+    <h1 class="slogan typographica">{{college?.slogan || 'Alumni Match'}}</h1>
+    <p class="welcome">Welcome Back {{user?.first_name}} {{user?.last_name}}!</p>
+  </div>
+  <ion-grid class="profile-row ion-no-margin ion-no-padding">
+    <ion-row>
+      <ion-col col-3 class="side ion-no-margin ion-no-padding ion-text-center" (click)="goLeaderboardPage()">
+        <p class="lbl">Popularity: </p>
+        <img src="assets/icon/rank.png" class="side-btn" appAM>
+        <p class="vlu" appAM>{{user?.rank || 0}}</p>
+      </ion-col>
+      <ion-col col-6 class="me ion-no-margin ion-no-padding ion-text-center">
+        <img [src]="user?.avatar || 'assets/imgs/user.png'" class="avatar" (click)="editProfile()" onerror="this.onerror=null;this.src='assets/imgs/user.png';" alt="">
+      </ion-col>
+      <ion-col col-3 class="side ion-no-margin ion-no-padding ion-text-center" (click)="goFriendPage('friends')">
+        <p class="lbl">Friend Count: </p>
+        <img src="assets/icon/hands.png" class="side-btn"  appAM>
+        <p class="vlu" appAM>{{user?.friends_count || 0}}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="main">
+    <div class="position-privacy">
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="auto">
+            Your Location: <span>{{user?.coordinate.show ? 'ON' : 'OFF'}}</span>
+          </ion-col>
+          <ion-col size="auto">
+            <ion-toggle appAM [ngModel]="user?.coordinate.show === 1" mode="ios" (ngModelChange)="changeLocationShow($event)"></ion-toggle>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <ion-card class="notic">
+      <ion-grid>
+        <ion-row>
+          <ion-col (click)="viewAllMessages()" class="ion-no-margin ion-no-padding ion-text-center">
+            <ion-icon name="ios-mail" appAM></ion-icon>
+            <h4>{{user?.messages_count || '0'}}</h4>
+            <p>New Messages</p>
+          </ion-col>
+          <ion-col (click)="goFriendPage('requests')" class="ion-no-margin ion-no-padding ion-text-center">
+            <ion-icon name="ios-person-add" appAM></ion-icon>
+            <h4>{{user?.freq_count || '0'}}</h4>
+            <p>Friend Requests</p>
+          </ion-col>
+          <!-- <ion-col (click)="viewNewEvent(me?.new_event_num)" class="ion-no-margin ion-no-padding ion-text-center">
+            <ion-icon name="ios-paper" appAM></ion-icon>
+            <h4>{{new_event_num || '0'}}</h4>
+            <p>New Event</p>
+          </ion-col> -->
+          <ion-col (click)="goFriendPage('visits')" class="ion-no-margin ion-no-padding ion-text-center">
+            <ion-icon name="eye" appAM></ion-icon>
+            <h4>{{user?.new_visits_count || '0'}}</h4>
+            <p>Profile Views:</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+    
+    <div *ngIf="friend_requests?.length" class="ion-margin-top">
+      <h6 class="title">Friend Requests:</h6>
+      <p class="description">{{friend_requests?.length || 0}} new friend requests</p>
+      <app-alumni-slides [users]="friend_requests"></app-alumni-slides>
+    </div>
+
+    <div *ngIf="messages && messages.length > 0" class="ion-margin-top">
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <h6 class="title">New Messages:</h6>
+            <p class="description">{{user?.messages_count}} total unread {{user?.messages_count > 1 ? 'messages' : 'message'}}</p>
+          </ion-col>
+          <ion-col size="auto" class="ion-no-padding">
+            <ion-button appAM (click)="viewAllMessages()" size="small">View</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-list class="ion-margin-end">
+        <app-message *ngFor="let msg of messages" [msg]="msg"></app-message>
+      </ion-list>
+    </div>
+
+    <div class="ion-margin-top" *ngIf="visitors && visitors.length > 0">
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <h6 class="title">{{user?.visits_count}} New Profile Views:</h6>
+            <p class="description">{{user?.new_visits_count || '0'}} total profile views</p>
+          </ion-col>
+          <ion-col size="auto" class="ion-no-padding">
+            <ion-button appAM (click)="goFriendPage('visits')" size="small" *ngIf="visitors.length > 6">View</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <app-alumni-slides [users]="visitors | matchOrder"></app-alumni-slides>
+    </div>
+
+    <div class="ion-margin-top" *ngIf="nears && nears.length > 0">
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <h6 class="title">Alumni Near You:</h6>
+            <p class="description">{{nears.length}} Alumni near you with their location on:</p>
+          </ion-col>
+          <ion-col size="auto" class="ion-no-padding">
+            <ion-button appAM (click)="goMapPage()" size="small">View</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <app-alumni-slides [users]="nears | matchOrder"></app-alumni-slides>
+    </div>
+
+  </div>
+</ion-content>

@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar appAM>
+    <ion-buttons slot="start">
+      <ion-button mode="md" (click)="dismiss()">
+        <ion-icon name="md-arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Languages You Speak</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <p class="am-title" position="stacked">What language(s) do you speak fluently?</p>
+    <div *ngFor="let language of data; let i = index;" class="mb-2">
+      <ion-item class="am-action-item">
+        <ion-item class="am-control-item" lines="none">
+          <ion-select [(ngModel)]="data[i]" okText="CHOOSE" cancelText="CANCEL" placeholder="What languages do you speak fluently?" [interfaceOptions]="selectLanguageOption">
+            <ion-select-option *ngFor="let item of languages; let i = index;" [value]="i">{{item}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-fab-button (click)="data.splice(i, 1);" appAM class="am-control-action" size="small" slot=end>
+          <ion-icon name="remove"></ion-icon>
+        </ion-fab-button>
+      </ion-item>
+    </div>
+    <ion-item lines="none" class="am-action-item">
+      <ion-button (click)="addLanguage()" appAM class="am-btn-add" size="small" expand="fill">
+        <ion-icon name="add-circle"></ion-icon> &nbsp;&nbsp;Add Another Language
+      </ion-button>
+    </ion-item>
+</ion-content>
+  
+<ion-footer appAM class="btn-footer">
+  <ion-button (click)="onSubmit()" expand="block" class="ion-no-margin" appAM>Submit</ion-button>
+</ion-footer>

@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar appAM>
+    <ion-buttons slot="start">
+      <ion-button mode="md" (click)="back()">
+        <ion-icon icon-only name="md-arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Most Popular Alumni</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h5 appAM *ngIf="user?.college" class="title ion-padding-start ion-padding-end"># of {{user?.college.acronym}} alumni: {{user?.rank}}</h5>
+  <ion-list>
+    <ion-grid *ngFor="let u of users">
+      <ion-row class="ion-align-items-center">
+        <ion-col size="1"><span class="rank" appAM>{{u.rank}}</span></ion-col>
+        <ion-col>
+          <app-alumni [user]="u" (profileClick)="viewProfile(user)"></app-alumni>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,24 @@
+<ion-header>
+</ion-header>
+<ion-content class="ion-text-center" no-bounce>
+  <ion-toolbar class="content-toolbar">
+    <ion-buttons slot="start">
+      <ion-button color="light" (click)="goBack()">
+        <ion-icon name="md-arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Join AlumniMatch!</ion-title>
+  </ion-toolbar>
+  <img class="logo" src="assets/imgs/login/icn_logo_trans.png">
+  <p class="title ion-padding-start ion-padding-end">
+    Alumnimatch is 100% FREE to use and Join! It is a trusted, private community exclusively for members to interact and be matched with other members within their college alumni network.
+  </p>
+  <p class="subtitle ion-padding-start ion-padding-end">Please choose below:</p>
+  <app-social-buttons (scClick)="join($event)"></app-social-buttons>
+  <p class="ion-padding-start ion-padding-end ion-no-margin support-text">
+    The three main pillars of AlumniMatch are: Diversity, Spirit, and Purpose. 
+  </p>
+  <p class="privacy">
+    More info here about <a (click)="viewPrivacy()">Our Privacy Policy</a>
+  </p>
+</ion-content>

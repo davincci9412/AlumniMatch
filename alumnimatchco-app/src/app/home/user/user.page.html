@@ -1,0 +1,201 @@
+<ion-header>
+  <ion-toolbar appAM>
+    <ion-buttons slot="start">
+      <ion-back-button mode="md" icon="md-arrow-back"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{user ? (user?.first_name + ' ' + user?.last_name) : 'Detail User'}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="top">
+    <img [src]="college.banner||'assets/imgs/banner.png'" class="banner" appAM onerror="this.onerror=null;this.src='assets/imgs/banner.png';" alt="">
+    <div class="btn-left top-btn" *ngIf="!user?.is_friend" (click)="addasfriend()">
+      <ion-fab-button size="small" appAM>
+        <img src="assets/icon/icn_add_friend.png">
+      </ion-fab-button>
+      <p>Add As<br> Friend</p>
+    </div>
+    <div class="btn-left top-btn" *ngIf="user?.is_friend == 20">
+      <ion-fab-button size="small" appAM>
+        <ion-icon name="ios-clock"></ion-icon>
+      </ion-fab-button>
+      <p>Pending</p>
+    </div>
+    <div class="btn-left top-btn" *ngIf="user?.is_friend == 1">
+      <ion-fab-button size="small" appAM>
+        <ion-icon name="ios-heart"></ion-icon>
+      </ion-fab-button>
+      <p>Is Friend</p>
+    </div>
+    <div class="btn-left top-btn" *ngIf="user?.is_friend == 10" (click)="approve()">
+      <ion-fab-button size="small" appAM>
+        <ion-icon name="md-checkmark-circle-outline"></ion-icon>
+      </ion-fab-button>
+      <p>Approve<br>Friend Request</p>
+    </div>
+    <div class="btn-right top-btn" (click)="sendMessage()">
+      <ion-fab-button size="small" appAM>
+          <img src="assets/icon/icn_message.png">
+      </ion-fab-button>
+      <p>Send<br>Message</p>
+    </div>
+    <div class="btn-center top-btn" (click)="video()">
+      <ion-fab-button size="small" appAM>
+        <ion-icon name="videocam"></ion-icon>
+      </ion-fab-button>
+      <p>Zoom Video</p>
+    </div>
+  </div>
+  <div class="avatar">
+    <img [src]="user?.avatar || 'assets/imgs/user.png'"  onerror="this.onerror=null;this.src='assets/imgs/user.png';" alt="">
+    <div class="match-rate" appAM>
+      {{user?.match}}% Match
+    </div>
+  </div>
+  <div class="main">
+    <h6 class="title">{{user?.friends_count}} Friends / <span appAM>{{friends?.length || 0}} Shared Friends</span></h6>
+    <app-alumni-slides [users]="friends"></app-alumni-slides>
+    
+    <ion-grid class="global">
+      <ion-row>
+        <ion-col col-4>
+          <img src="assets/icon/icn_college.png">
+          <p appAM>
+            {{DEGREES[user?.graduated.degree]?.name}}
+          </p>
+        </ion-col>
+        <ion-col col-4>
+          <img src="assets/icon/icn_shared.png">
+          <p appAM>{{friends?.length || '0'}} Shared<br>Friends</p>
+        </ion-col>
+        <ion-col col-4>
+          <img src="assets/icon/icn_eye.png">
+          <p appAM>{{user?.visits_count || '0'}} Profile<br>Views</p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="detail-info">
+      <ion-toolbar class="segments-toolbar">
+        <ion-segment scrollable [(ngModel)]="psegment" mode="ios">
+          <ion-segment-button mode="ios" value="ps" appAM>
+            College Life
+          </ion-segment-button>
+          <ion-segment-button mode="ios" value="cl" appAM>
+            Current Reality
+          </ion-segment-button>
+        </ion-segment>
+      </ion-toolbar>
+      <div [ngSwitch]="psegment" class="ion-padding-start ion-padding-end segments-content">
+        <ion-list *ngSwitchCase="'ps'">
+          <p class="am-title" appAM>Degree</p>
+          <ion-item *ngFor="let degree of ps?.degrees" class="ion-no-padding btn-item">
+            <ion-icon slot="start" name="ios-school" appAM></ion-icon>
+            <ion-label color="dark">
+              <h4 appAM>{{DEGREE_TYPES[degree.type]}} - {{degree.year}}</h4>
+              <p>{{degree.degree.name}}</p>
+            </ion-label>
+          </ion-item>
+          <p class="am-title" appAM>Orgs</p>
+          <ion-item *ngFor="let org of ps?.orgs" class="ion-no-padding btn-item">
+            <ion-icon slot="start" name="ios-people" appAM></ion-icon>
+            <ion-label color="dark">
+              <h4 appAM>{{org.org.name}}</h4>
+            </ion-label>
+          </ion-item>
+          <p *ngIf="ps?.athlete" class="am-title" appAM>Athletics</p>
+          <ion-item *ngIf="ps?.athlete" class="ion-no-padding">
+            <ion-icon slot="start" name="ios-tennisball" appAM></ion-icon>
+            <ion-label color="dark">
+              <h4 appAM>{{ps.athlete.athlete?.name}}</h4>
+              <p>{{ATHLETE_MEMBERS[ps.athlete.member]}} / {{ATHLETE_POSITIONS[ps.athlete.position] || ''}}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-list *ngSwitchCase="'cl'">
+          <ion-item *ngIf="cl?.gender_age" class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Gender</h4>
+              <p>{{GENDERS[cl?.gender_age.gender]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="cl?.gender_age" class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Age Group</h4>
+              <p>{{AGEGROUPS[cl?.gender_age.age]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="cl?.ethnicity" class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Ethnicity</h4>
+              <p>{{ETHNICITIES[cl?.ethnicity.ethnicity]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Language Spoken</h4>
+              <p *ngFor="let language of cl?.speak_languages">{{LANGUAGES[language.language]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Language Learning</h4>
+              <p *ngFor="let language of cl?.learn_languages">{{LANGUAGES[language.language]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Spirituality</h4>
+              <p>{{RELIGIONS[cl?.religion.religion]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Relationship</h4>
+              <p>{{RELATIONSHIPS[cl?.relationship.relationship]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Home Base</h4>
+              <p>{{cl?.home.zip}} {{cl?.home.state}} {{cl?.home.country}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Home Town</h4>
+              <p>{{cl?.hometown.zip}} {{cl?.hometown.state}} {{cl?.hometown.country}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Health</h4>
+              <p>Mental Excercise: {{MENTAL_EXERCISES[cl?.health.mental]}}</p>
+              <p>Physical Excercise: {{PHYSICAL_EXERCISES[cl?.health.physical]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Interests</h4>
+              <p *ngFor="let hobby of cl?.hobbies">{{hobby.hobby.name}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Causes</h4>
+              <p *ngFor="let cause of cl?.causes">{{CAUSES[cause.cause]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Association Questions</h4>
+              <p>{{cl?.school.member ? 'Paying Member' : 'Not Paying Member'}}</p>
+              <p *ngIf="cl?.school.member">Satisfaction level: {{SATIS_LEVELS[cl?.school.satis_level]}}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+  </div>
+</ion-content>

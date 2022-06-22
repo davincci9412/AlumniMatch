@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "267418649890",
+    "firebase_url": "https://alumnimatchapp.firebaseio.com",
+    "project_id": "alumnimatchapp",
+    "storage_bucket": "alumnimatchapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267418649890:android:8535de53a20ffc0a15517b",
+        "android_client_info": {
+          "package_name": "com.alumni.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267418649890-e9q7r41622pltt1vikidqec3mtp8c52p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2icMENltsLVQCTEqpiR3oqCZzJeehHaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267418649890-e9q7r41622pltt1vikidqec3mtp8c52p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "267418649890-oj9miif7j6c281fc2dtfoqdkmjh4ksiu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alumni.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

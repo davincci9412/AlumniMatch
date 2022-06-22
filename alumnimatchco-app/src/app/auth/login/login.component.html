@@ -1,0 +1,22 @@
+<ion-header></ion-header>
+
+<ion-content class="ion-text-center" no-bounce>
+  <ion-toolbar class="content-toolbar">
+    <ion-buttons slot="start">
+      <ion-button color="light" (click)="goBack()">
+        <ion-icon name="md-arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Existing Members</ion-title>
+  </ion-toolbar>
+  <img class="logo" src="assets/imgs/login/icn_logo_trans.png">
+  <h1 class="title">Welcome Back!</h1>
+  <p class="subtitle ion-padding-start ion-padding-end">Please choose the social account you used to register:</p>
+  <app-social-buttons (scClick)="login($event)"></app-social-buttons>
+  <p class="ion-padding-start ion-padding-end ion-no-margin support-text">
+    Please email us at <span>support@alumnimatch.co</span> or visit our website at <span>www.alumnimatch.co</span>
+  </p>
+  <p class="privacy">
+    Diversity, Spirit, Purpose. 
+  </p>
+</ion-content>

@@ -1,0 +1,187 @@
+<ion-header>
+  <ion-toolbar appAM>
+    <ion-buttons slot="start">
+      <ion-button mode="md" (click)="back()">
+        <ion-icon icon-only name="md-arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Your Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="top">
+    <img [src]="'assets/imgs/banner.png'" class="banner" appAM>
+    <div class="username typographica">
+      {{user?.first_name}} {{user?.last_name}}
+    </div>
+    <div class="btn-left top-btn" (click)="editProfile()">
+      <ion-fab-button appAM size="small">
+        <ion-icon name="md-paper"></ion-icon>
+      </ion-fab-button>
+      <p>Edit<br>Profile</p>
+    </div>
+    <div class="btn-right top-btn" (click)="takePhoto()">
+      <ion-fab-button appAM size="small">
+        <ion-icon name="md-camera"></ion-icon>
+      </ion-fab-button>
+      <p>Change<br>Photo</p>
+    </div>
+  </div>
+  <div class="avatar">
+    <img [src]="user?.avatar || 'assets/imgs/user.png'" #avatar  onerror="this.onerror=null;this.src='assets/imgs/user.png';" alt="{{user?.first_name}}">
+  </div>
+  <div class="main">
+    <div *ngIf="friends?.length">
+      <h6 class="title">{{user.friends_count || 0}} Friends / <span appAM>{{friends?.length || 0}} Shared Friends</span></h6>
+      <app-alumni-slides [users]="friends"></app-alumni-slides>
+    </div>
+
+    <ion-grid class="global-info">
+      <ion-row>
+        <ion-col>
+          <img src="assets/icon/icn_college.png">
+          <p appAM>{{user?.graduated.year}}</p>
+        </ion-col>
+        <ion-col>
+          <img src="assets/icon/icn_shared.png">
+          <p appAM>{{friends?.length || 0}} Shared<br>Friends</p>
+        </ion-col>
+        <ion-col>
+          <img src="assets/icon/icn_eye.png">
+          <p appAM>{{user?.visits_count || 0}} Profile<br>Views</p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="detail-info">
+      <ion-toolbar class="segments-toolbar">
+        <ion-segment scrollable [(ngModel)]="psegment" mode="ios" (ionChange)="segmentChanged($event)">
+          <ion-segment-button mode="ios" value="ps" appAM>
+            Past School
+          </ion-segment-button>
+          <ion-segment-button mode="ios" value="cl" appAM>
+            Current Life
+          </ion-segment-button>
+          <ion-segment-button mode="ios" value="friends" appAM>
+            Friends
+          </ion-segment-button>
+        </ion-segment>
+      </ion-toolbar>
+      <div [ngSwitch]="psegment" class="ion-padding-start ion-padding-end segments-content">
+        <ion-list *ngSwitchCase="'ps'">
+          <p class="am-title" appAM>Degrees</p>
+          <ion-item *ngFor="let degree of ps?.degrees" class="ion-no-padding btn-item" button (click)="findSimilarUsers('Degree', degree.degree.id)">
+            <ion-icon slot="start" name="ios-school" appAM></ion-icon>
+            <ion-label color="dark">
+              <h4 appAM>{{DEGREE_TYPES[degree.type]}} - {{degree.year}}</h4>
+              <p>{{degree.degree.name}}</p>
+            </ion-label>
+          </ion-item>
+          <p class="am-title" appAM>Student Orgs</p>
+          <ion-item *ngFor="let org of ps?.orgs" class="ion-no-padding btn-item" button (click)="findSimilarUsers('Organization', org.org.id)">
+            <ion-icon slot="start" name="ios-people" appAM></ion-icon>
+            <ion-label color="dark">
+              <h4 appAM>{{org.org.name}}</h4>
+            </ion-label>
+          </ion-item>
+          <p class="am-title" appAM>Athletics</p>
+          <ion-item *ngIf="ps?.athlete" class="ion-no-padding">
+            <ion-icon slot="start" name="ios-tennisball" appAM></ion-icon>
+            <ion-label color="dark">
+              <h4 appAM *ngIf="ps.athlete.athlete">{{ps.athlete.athlete.name}}</h4>
+              <p>{{ATHLETE_MEMBERS[ps.athlete.member]}} <span *ngIf="ATHLETE_POSITIONS[ps.athlete.position]">/ {{ATHLETE_POSITIONS[ps.athlete.position]}}</span></p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-list *ngSwitchCase="'cl'">
+          <ion-item *ngIf="cl?.gender_age" class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Gender</h4>
+              <p>{{GENDERS[cl?.gender_age.gender]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="cl?.gender_age" class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Age Group</h4>
+              <p>{{AGEGROUPS[cl?.gender_age.age]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="cl?.ethnicity" class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Ethnicity</h4>
+              <p>{{ETHNICITIES[cl?.ethnicity.ethnicity]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Languages You Speak</h4>
+              <p *ngFor="let language of cl?.speak_languages">{{LANGUAGES[language.language]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Language Learning</h4>
+              <p *ngFor="let language of cl?.learn_languages">{{LANGUAGES[language.language]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Spirituality</h4>
+              <p>{{RELIGIONS[cl?.religion.religion]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Relationship</h4>
+              <p>{{RELATIONSHIPS[cl?.relationship.relationship]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Home Base</h4>
+              <p>{{cl?.home.zip}} {{cl?.home.state}} {{cl?.home.country}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Hometown</h4>
+              <p>{{cl?.hometown.zip}} {{cl?.hometown.state}} {{cl?.hometown.country}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Health</h4>
+              <p>Mental Excercise: {{MENTAL_EXERCISES[cl?.health.mental]}}</p>
+              <p>Physical Excercise: {{PHYSICAL_EXERCISES[cl?.health.physical]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Hobbies & Interests</h4>
+              <p *ngFor="let hobby of cl?.hobbies">{{hobby.hobby.name}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>Causes</h4>
+              <p *ngFor="let cause of cl?.causes">{{CAUSES[cause.cause]}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label color="dark">
+              <h4 appAM>School Related Questions</h4>
+              <p>{{cl?.school.member ? 'Paying Member' : 'Not Paying Member'}}</p>
+              <p *ngIf="cl?.school.member">Satisfaction level: {{SATIS_LEVELS[cl?.school.satis_level]}}</p>
+            </ion-label>
+          </ion-item>
+
+        </ion-list>
+        <ion-list *ngSwitchCase="'friends'">
+          <app-alumni *ngFor="let friend of friends | matchOrder" [user]="friend"></app-alumni>
+        </ion-list>
+      </div>
+    </div>
+    
+  </div>
+</ion-content>
